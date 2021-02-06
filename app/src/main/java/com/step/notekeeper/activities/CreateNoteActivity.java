@@ -1,9 +1,11 @@
-package com.step.notekeeper;
+package com.step.notekeeper.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.widget.ImageView;
+
+import com.step.notekeeper.R;
 
 import java.util.Objects;
 
