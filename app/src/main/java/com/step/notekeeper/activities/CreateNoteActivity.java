@@ -87,6 +87,6 @@ public class CreateNoteActivity extends AppCompatActivity {
             }
         }
 
-        new SaveNoteTask().onPreExecute();
+        new SaveNoteTask().execute();
     }
 }

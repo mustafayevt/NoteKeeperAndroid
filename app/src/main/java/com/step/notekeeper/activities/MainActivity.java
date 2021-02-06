@@ -1,13 +1,18 @@
 package com.step.notekeeper.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 
-import com.step.notekeeper.R;
+import androidx.appcompat.app.AppCompatActivity;
 
+import com.step.notekeeper.R;
+import com.step.notekeeper.database.NotesDatabase;
+import com.step.notekeeper.entities.Note;
+
+import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,5 +30,28 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(new Intent(this, CreateNoteActivity.class),
                     REQUEST_CODE_ADD_NOTE);
         });
+
+        getNotes();
+    }
+
+    private void getNotes() {
+
+        class GetNotesTask extends AsyncTask<Void, Void, List<Note>> {
+            @Override
+            protected void onPostExecute(List<Note> notes) {
+                super.onPostExecute(notes);
+                //TODO: display the notes.
+            }
+
+            @Override
+            protected List<Note> doInBackground(Void... voids) {
+                return NotesDatabase
+                        .getDatabase(getApplicationContext())
+                        .noteDao()
+                        .getAllNotes();
+            }
+        }
+
+        new GetNotesTask().execute();
     }
 }
