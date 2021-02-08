@@ -7,17 +7,25 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.step.notekeeper.R;
+import com.step.notekeeper.adapters.NotesAdapter;
 import com.step.notekeeper.database.NotesDatabase;
 import com.step.notekeeper.entities.Note;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final int REQUEST_CODE_ADD_NOTE = 1;
+
+    private RecyclerView notesRecyclerView;
+    private List<Note> noteList;
+    private NotesAdapter notesAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +39,15 @@ public class MainActivity extends AppCompatActivity {
                     REQUEST_CODE_ADD_NOTE);
         });
 
+        notesRecyclerView = findViewById(R.id.notesRecyclerView);
+        notesRecyclerView.setLayoutManager(
+                new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        );
+
+        noteList = new ArrayList<>();
+        notesAdapter = new NotesAdapter(noteList);
+        notesRecyclerView.setAdapter(notesAdapter);
+
         getNotes();
     }
 
@@ -40,7 +57,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(List<Note> notes) {
                 super.onPostExecute(notes);
-                //TODO: display the notes.
+                if (noteList.size() == 0) {
+                    noteList.addAll(notes);
+                    notesAdapter.notifyDataSetChanged();
+                } else {
+                    noteList.add(0, notes.get(0));
+                    notesAdapter.notifyItemInserted(0);
+                }
+                notesRecyclerView.smoothScrollToPosition(0);
             }
 
             @Override
